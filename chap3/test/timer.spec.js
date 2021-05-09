@@ -34,19 +34,19 @@ describe("timer", () => {
     it("should accept number and callback", () => {
         return new Promise(resolve => {
             const timer = new Timer(0, (count) => { 
-                expect(count).toEqual(0);
+                expect(count).toEqual(1);
                 resolve();
             });
             timer.start();
         });
     });
-    it("should receive 0 tick for totalTime 45 millisecond", () => {
+    it("should receive 1 tick for totalTime 45 millisecond", () => {
         const promiseHandler = createPromiseHandler();
         const profiler = createProfiler();
         let count = 0;
         new Timer(45, () => {
             profiler.stop();
-            expect(count).toEqual(0);
+            expect(count).toEqual(1);
             profiler.log();
             expect(profiler.duration()).toBeLessThan(50);
             expect(profiler.duration()).toBeGreaterThanOrEqual(45);
@@ -55,13 +55,13 @@ describe("timer", () => {
         profiler.start();
         return promiseHandler.promise;
     });
-    it("should receive 1 tick for totalTime 50 millisecond", () => {
+    it("should receive 2 tick for totalTime 50 millisecond", () => {
         const promiseHandler = createPromiseHandler();
         const profiler = createProfiler();
         let count = 0;
         new Timer(50, () => {
             profiler.stop();
-            expect(count).toEqual(1);
+            expect(count).toEqual(2);
             profiler.log();
             expect(profiler.duration()).toBeLessThan(60);
             expect(profiler.duration()).toBeGreaterThanOrEqual(50);
@@ -70,13 +70,13 @@ describe("timer", () => {
         profiler.start();
         return promiseHandler.promise;
     });
-    it("should receive 10 tick for totalTime 500 millisecond", () => {
+    it("should receive 11 tick for totalTime 500 millisecond", () => {
         const promiseHandler = createPromiseHandler();
         const profiler = createProfiler();
         let count = 0;
         new Timer(500, () => {
             profiler.stop();
-            expect(count).toEqual(10);
+            expect(count).toEqual(11);
             profiler.log();
             expect(profiler.duration()).toBeLessThan(600);
             expect(profiler.duration()).toBeGreaterThanOrEqual(500);
@@ -85,13 +85,14 @@ describe("timer", () => {
         profiler.start();
         return promiseHandler.promise;
     });
-    it("should receive 10 tick for totalTime 549 millisecond", () => {
+    it("should receive 11 tick for totalTime 549 millisecond", () => {
         const promiseHandler = createPromiseHandler();
         const profiler = createProfiler();
         let count = 0;
         new Timer(549, () => {
             profiler.stop();
-            expect(count).toEqual(10);
+            expect(count).toEqual(11);
+            profiler.log();
             expect(profiler.duration()).toBeLessThan(650);
             expect(profiler.duration()).toBeGreaterThanOrEqual(500);
             promiseHandler.resolve();

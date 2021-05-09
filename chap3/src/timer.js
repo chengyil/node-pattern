@@ -1,4 +1,5 @@
 const { EventEmitter} = require("events");
+const { nextTick } = require("process");
 
 const INTERVAL = 50;
 
@@ -6,6 +7,11 @@ const STATE = {
     NEW: "new",
     PENDING: "pending",
     COMPLETED: "completed",
+};
+
+const EVENTS = {
+    TICK: "tick",
+    COMPLETE: "complete"
 };
 
 module.exports = class Timer extends EventEmitter{
@@ -20,6 +26,7 @@ module.exports = class Timer extends EventEmitter{
 
     start() {
         if(this.isNew()) {
+            nextTick(() => this.doTick());
             this.tickOrComplete();
         } else {
             return false;
@@ -42,10 +49,15 @@ module.exports = class Timer extends EventEmitter{
     tick() {
         this.intervalId = setInterval(() => { 
             this.timeLeft -= INTERVAL;
-            this.count += 1;
-            this.emit("tick");
+            this.doTick();
             this.continueTickOrComplete();
         }, INTERVAL);
+    }
+
+    doTick() {
+        this.count += 1;
+        this.emit(EVENTS.TICK);
+
     }
 
     continueTickOrComplete() {
@@ -57,7 +69,7 @@ module.exports = class Timer extends EventEmitter{
 
     complete() {
         setTimeout(() => { 
-            this.emit("complete", this.count);
+            this.emit(EVENTS.COMPLETE, this.count);
             this.callback(this.count);
         }, this.timeLeft);
     }
