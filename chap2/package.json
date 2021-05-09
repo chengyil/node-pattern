@@ -1,0 +1,16 @@
+{
+  "name": "chap2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "common": "node common.js",
+    "esm": "node --experimental-modules esm.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.12.0"
+  }
+}
