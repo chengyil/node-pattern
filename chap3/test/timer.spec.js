@@ -1,39 +1,9 @@
 const Timer = require("@src/timer");
-function createPromiseHandler () {
-    let resolve, reject, promise;
-    promise = new Promise((_resolve, _reject) => { [resolve, reject] = [_resolve, _reject];});
-
-    return {
-        resolve, reject, promise
-    };
-}
-
-function createProfiler () {
-    let startTime, stopTime, durationTime;
-
-    return {
-        start (){
-            startTime = process.hrtime.bigint();
-        },
-        stop (){
-            stopTime = process.hrtime.bigint();
-        },
-        duration () {
-            if(!durationTime) { 
-                durationTime = (stopTime - startTime) / 1000000n;
-            }
-            return durationTime; 
-        },
-        log() {
-            console.log("time to complete : " + this.duration());
-        }
-    };
-
-}
+const {createProfiler, createPromiseHandler} = require("./testHelper");
 describe("timer", () => {
     it("should accept number and callback", () => {
         return new Promise(resolve => {
-            const timer = new Timer(0, (count) => { 
+            const timer = new Timer(0, (err, count) => { 
                 expect(count).toEqual(1);
                 resolve();
             });
@@ -48,7 +18,7 @@ describe("timer", () => {
             profiler.stop();
             expect(count).toEqual(1);
             profiler.log();
-            expect(profiler.duration()).toBeLessThan(50);
+            expect(profiler.duration()).toBeLessThan(55);
             expect(profiler.duration()).toBeGreaterThanOrEqual(45);
             promiseHandler.resolve();
         }).on("tick", () => { count += 1;}).start();
@@ -63,7 +33,7 @@ describe("timer", () => {
             profiler.stop();
             expect(count).toEqual(2);
             profiler.log();
-            expect(profiler.duration()).toBeLessThan(60);
+            expect(profiler.duration()).toBeLessThan(65);
             expect(profiler.duration()).toBeGreaterThanOrEqual(50);
             promiseHandler.resolve();
         }).on("tick", () => { count += 1;}).start();
@@ -78,7 +48,7 @@ describe("timer", () => {
             profiler.stop();
             expect(count).toEqual(11);
             profiler.log();
-            expect(profiler.duration()).toBeLessThan(600);
+            expect(profiler.duration()).toBeLessThan(800);
             expect(profiler.duration()).toBeGreaterThanOrEqual(500);
             promiseHandler.resolve();
         }).on("tick", () => { count += 1;}).start();
@@ -93,7 +63,7 @@ describe("timer", () => {
             profiler.stop();
             expect(count).toEqual(11);
             profiler.log();
-            expect(profiler.duration()).toBeLessThan(650);
+            expect(profiler.duration()).toBeLessThan(800);
             expect(profiler.duration()).toBeGreaterThanOrEqual(500);
             promiseHandler.resolve();
         }).on("tick", () => { count += 1;}).start();

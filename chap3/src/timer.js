@@ -1,19 +1,6 @@
 const { EventEmitter} = require("events");
 const { nextTick } = require("process");
-
-const INTERVAL = 50;
-
-const STATE = {
-    NEW: "new",
-    PENDING: "pending",
-    COMPLETED: "completed",
-};
-
-const EVENTS = {
-    TICK: "tick",
-    COMPLETE: "complete"
-};
-
+const { STATE, INTERVAL, EVENTS } = require("./timer/constant");
 module.exports = class Timer extends EventEmitter{
     constructor(totalTime, callback) {
         super();
@@ -57,7 +44,6 @@ module.exports = class Timer extends EventEmitter{
     doTick() {
         this.count += 1;
         this.emit(EVENTS.TICK);
-
     }
 
     continueTickOrComplete() {
@@ -70,7 +56,8 @@ module.exports = class Timer extends EventEmitter{
     complete() {
         setTimeout(() => { 
             this.emit(EVENTS.COMPLETE, this.count);
-            this.callback(this.count);
+            this.callback(null, this.count);
+            this.state = STATE.COMPLETED;
         }, this.timeLeft);
     }
 
