@@ -3,6 +3,7 @@ const fs = require('fs');
 describe('concatFiles', () => {
   let buffer = '';
   beforeEach(() => {
+    buffer = '';
     fs.readFile = jest.fn().mockImplementation((filename, encoding, cb) => {
       let result;
       switch (filename) {
@@ -23,11 +24,11 @@ describe('concatFiles', () => {
       cb(null, 3);
     });
   });
-  it('should accept files, dest and cb', (done) => {
+  it('should concat a list of files in order', (done) => {
     concatFiles('file1.txt',
         'file2.txt',
         'file3.txt',
-        './test/data/combined.txt',
+        'combined.txt',
         (err) => {
           expect(err).toEqual(undefined);
           expect(buffer).toEqual('foobarworld');
