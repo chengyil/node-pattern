@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "baseUrl": "./",
+        "paths": {
+            "@part4/*": [ "src/part4/*" ],
+            "@part3/*": [ "src/part3/*" ],
+            "@part2/*": [ "src/part2/*" ],
+            "@part1/*": [ "src/part1/*" ],
+            "@src/*": [ "src/*" ],
+        }
+    },
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    }
+}
